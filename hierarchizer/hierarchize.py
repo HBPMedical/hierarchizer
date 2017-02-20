@@ -40,6 +40,7 @@ def main():
                 dest_path += "/" + part
             dest_path = path.normpath(dest_path)
             makedirs(dest_path, exist_ok=True)
+            logging.info("Copying %s to %s..." % (file_path, dest_path))
             copy2(file_path, dest_path)
         except (IsADirectoryError, InvalidDicomError):
             pass

@@ -1,13 +1,15 @@
 #!/usr/bin/env python3.5
 
-import logging
 import argparse
+import logging
 import dicom
-from os import path
-from os import makedirs
-from shutil import copy2
 from glob import iglob
+from os import makedirs
+from os import path
+from shutil import copy2
 from dicom.errors import InvalidDicomError
+
+import ppmi_xml_extension
 
 
 def main():
@@ -20,6 +22,7 @@ def main():
                              nargs='+',
                              default=['PatientID', 'StudyID', 'SeriesDescription', 'SeriesNumber'])
     args_parser.add_argument("--unknown_value", default="unknown")
+    args_parser.add_argument("--ppmi_xml_extension", action='store_true')
     args = args_parser.parse_args()
 
     for file_path in iglob(path.join(args.input_folder, "**/*"), recursive=True):
@@ -28,8 +31,12 @@ def main():
             dest_path = args.output_folder
             for attribute in args.attributes:
                 part = str(dcm.data_element(attribute).value)
-                if len(part) < 1:
-                    part = args.unknown_value
+                if len(part.strip()) < 1:
+                    part = None
+                    if args.ppmi_xml_extension:
+                        part = ppmi_xml_extension.find(file_path, attribute)
+                    if not part:
+                        part = args.unknown_value
                 dest_path += "/" + part
             dest_path = path.normpath(dest_path)
             makedirs(dest_path, exist_ok=True)

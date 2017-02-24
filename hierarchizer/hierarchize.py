@@ -12,6 +12,9 @@ from dicom.errors import InvalidDicomError
 import ppmi_xml_extension
 
 
+DEFAULT_PPMI_EXCLUDED_FIELDS = ['StudyID', 'SeriesNumber']
+
+
 def main():
     logging.basicConfig(level=logging.INFO)
 
@@ -23,7 +26,11 @@ def main():
                              default=['PatientID', 'StudyID', 'SeriesDescription', 'SeriesNumber'])
     args_parser.add_argument("--unknown_value", default="unknown")
     args_parser.add_argument("--ppmi_xml_extension", action='store_true')
+    args_parser.add_argument("--excluded_fields", nargs='+', default=[])
     args = args_parser.parse_args()
+
+    if args.ppmi_xml_extension and not args.excluded_fields:
+        excluded_fields = DEFAULT_PPMI_EXCLUDED_FIELDS
 
     for file_path in iglob(path.join(args.input_folder, "**/*"), recursive=True):
         try:
@@ -31,7 +38,7 @@ def main():
             dest_path = args.output_folder
             for attribute in args.attributes:
                 part = str(dcm.data_element(attribute).value)
-                if len(part.strip()) < 1:
+                if len(part.strip()) < 1 or attribute in excluded_fields:
                     part = None
                     if args.ppmi_xml_extension:
                         part = ppmi_xml_extension.find(file_path, attribute)

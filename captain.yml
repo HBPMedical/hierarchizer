@@ -1,0 +1,7 @@
+hierarchizer:
+  build: Dockerfile
+  image: hbpmip/hierarchizer
+  pre:
+    - echo "Building hbpmip/hierarchizer image"
+  post:
+    - echo "Finished building hbpmip/hierarchizer image"

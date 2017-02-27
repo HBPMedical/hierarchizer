@@ -1,5 +1,7 @@
 FROM hbpmip/python-base:a2b201e
 
+MAINTAINER mirco.nasuti@chuv.ch
+
 COPY hierarchizer/ /hierarchizer/
 COPY requirements.txt /requirements.txt
 

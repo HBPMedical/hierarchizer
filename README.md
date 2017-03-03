@@ -20,8 +20,8 @@ where:
 * <output_folder> is the folder that will contain the hierarchized DICOM files
 * options:
   * -h, --help : show help
-  * --dataset DATASET
-  * --type TYPE
+  * --dataset DATASET : Dataset code (CLM, EDSD, PPMI, ADNI)
+  * --type TYPE : Type of image files (DICOM, NIFTI)
   * --attributes ATTRIBUTES [ATTRIBUTES ...] : list of DICOM fields to use as a folder hierarchy
   (default=['PatientID', 'StudyID', 'SeriesDescription', 'SeriesNumber'])
   * --unknown_value UNKNOWN_VALUE : value to use if a field cannot be found (default="unknown")

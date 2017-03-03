@@ -2,7 +2,6 @@ from defusedxml import ElementTree
 from os import path
 from glob import iglob
 
-
 MAPPING = {"StudyID": "./study", "SeriesNumber": "./series"}
 
 

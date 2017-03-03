@@ -2,17 +2,16 @@
 
 import argparse
 import logging
-import dicom
-from glob import iglob
-from os import makedirs
-from os import path
-from shutil import copy2
-from dicom.errors import InvalidDicomError
+import os
+import sys
 
-import ppmi_xml_extension
+PACKAGE_PARENT = '..'
+SCRIPT_DIR = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
+sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
 
-
-DEFAULT_PPMI_EXCLUDED_FIELDS = ['StudyID', 'SeriesNumber']
+from hierarchizer import ppmi_xml_extension
+from hierarchizer import dicom_organizer
+from hierarchizer import nifti_organizer
 
 
 def main():
@@ -21,36 +20,33 @@ def main():
     args_parser = argparse.ArgumentParser()
     args_parser.add_argument("input_folder")
     args_parser.add_argument("output_folder")
+    args_parser.add_argument("--dataset", default="generic")
+    args_parser.add_argument("--type", default="DICOM")
     args_parser.add_argument("--attributes",
                              nargs='+',
                              default=['PatientID', 'StudyID', 'SeriesDescription', 'SeriesNumber'])
     args_parser.add_argument("--unknown_value", default="unknown")
     args_parser.add_argument("--ppmi_xml_extension", action='store_true')
-    args_parser.add_argument("--excluded_fields", nargs='+', default=[])
+    args_parser.add_argument("--excluded_fields", nargs='+')
     args = args_parser.parse_args()
 
-    if args.ppmi_xml_extension and not args.excluded_fields:
-        excluded_fields = DEFAULT_PPMI_EXCLUDED_FIELDS
+    # If dataset is PPMI, force use of ppmi_xml_extension
+    if args.dataset.upper() == 'PPMI':
+        logging.info("Enabling ppmi_xml_extension...")
+        args.ppmi_xml_extension = True
 
-    for file_path in iglob(path.join(args.input_folder, "**/*"), recursive=True):
-        try:
-            dcm = dicom.read_file(file_path)
-            dest_path = args.output_folder
-            for attribute in args.attributes:
-                part = str(dcm.data_element(attribute).value)
-                if len(part.strip()) < 1 or attribute in excluded_fields:
-                    part = None
-                    if args.ppmi_xml_extension:
-                        part = ppmi_xml_extension.find(file_path, attribute)
-                    if not part:
-                        part = args.unknown_value
-                dest_path += "/" + part
-            dest_path = path.normpath(dest_path)
-            makedirs(dest_path, exist_ok=True)
-            logging.info("Copying %s to %s..." % (file_path, dest_path))
-            copy2(file_path, dest_path)
-        except (IsADirectoryError, InvalidDicomError):
-            pass
+    # If excluded_fields is not defined, setup to default values
+    if args.excluded_fields:
+        args.excluded_fields = []
+        # If ppmi_xml_extension is enabled, exclude some default fields
+        if args.ppmi_xml_extension:
+            logging.info("Using ppmi_xml_extension default...")
+            args.excluded_fields = list(ppmi_xml_extension.MAPPING.keys())
+
+    if args.type.upper() in ['DICOM', 'DCM']:
+        dicom_organizer.organize_dicom(args)
+    elif args.type.upper() in ['NIFTI', 'NII']:
+        nifti_organizer.organize_nifti(args)
 
 
 if __name__ == '__main__':

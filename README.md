@@ -20,10 +20,13 @@ where:
 * <output_folder> is the folder that will contain the hierarchized DICOM files
 * options:
   * -h, --help : show help
+  * --dataset DATASET
+  * --type TYPE
   * --attributes ATTRIBUTES [ATTRIBUTES ...] : list of DICOM fields to use as a folder hierarchy
   (default=['PatientID', 'StudyID', 'SeriesDescription', 'SeriesNumber'])
   * --unknown_value UNKNOWN_VALUE : value to use if a field cannot be found (default="unknown")
   * --ppmi_xml_extension : try to use meta-data from PPMI XML files if a field cannot be found in the DICOM files
+  * --excluded_fields EXCLUDED_FIELDS [EXCLUDED_FIELDS ...]
 
 
 ## Build

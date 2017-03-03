@@ -16,8 +16,8 @@ and/or external meta-data files (e.g. XML files fro PPMI).
 Run: `docker run --rm -v <input_folder>:/input_folder -v <output_folder>:/output_folder hbpmip/hierarchizer [options]`
 
 where:
-* <input_folder> is the folder containing the input DICOM files
-* <output_folder> is the folder that will contain the hierarchized DICOM files
+* <input_folder> is the folder containing the input DICOM/NIFTI files
+* <output_folder> is the folder that will contain the hierarchized DICOM/NIFTI files
 * options:
   * -h, --help : show help
   * --dataset DATASET : Dataset code (CLM, EDSD, PPMI, ADNI)

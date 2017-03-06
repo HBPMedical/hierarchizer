@@ -44,8 +44,11 @@ def organize_nifti_edsd(input_folder, output_folder):
         logging.info("Processing %s..." % archive_path)
 
         file_info = split(r'[+.]+', path.basename(archive_path))
+        prefix = "ng+"
         site = file_info[2]
-        subject_id = site + "_" + file_info[3]
+        sid_per_site = file_info[3]
+        proto = file_info[4]
+        subject_id = prefix + site + proto + sid_per_site
         directory = path.join(output_folder, subject_id)
         label_session = file_info[7]
         session_folder = path.join(directory, label_session)

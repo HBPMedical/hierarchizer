@@ -63,7 +63,7 @@ def organize_nifti_edsd(input_folder, output_folder):
         fullpath = path.join(repetition_folder, listdir(repetition_folder)[0])
         for f in iglob(fullpath + "/**.nii", recursive=True):
             shutil.move(f, repetition_folder)
-            shutil.rmtree(fullpath)
+        shutil.rmtree(fullpath)
 
         # TODO : write this in a more generic and proper way
         with open(path.join(repetition_folder, "meta.xml"), 'w') as f:

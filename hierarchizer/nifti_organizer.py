@@ -4,6 +4,7 @@ from os import path
 from os import makedirs
 from os import listdir
 from glob import iglob
+from re import split
 
 
 def organize_nifti(args):

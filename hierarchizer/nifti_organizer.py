@@ -68,10 +68,6 @@ def organize_nifti_edsd(input_folder, output_folder):
             shutil.move(f, repetition_folder)
         shutil.rmtree(fullpath)
 
-        # TODO : write this in a more generic and proper way
-        with open(path.join(repetition_folder, "meta.xml"), 'w') as f:
-            f.write("<siteKey>" + site + "</siteKey>")
-
     logging.info("DONE")
 
 

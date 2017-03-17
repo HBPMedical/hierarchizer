@@ -24,7 +24,8 @@ def organize_nifti_clm(input_folder, output_folder):
     for nii_file in iglob(path.join(input_folder, "**/*.nii"), recursive=True):
         logging.info("Processing %s..." % nii_file)
 
-        visit_id, subject_id = split(r'[_.]+', path.basename(nii_file))
+        visit_id, subject_id = path.basename(nii_file).split('_')
+        subject_id = subject_id[:-4]
         directory = path.join(output_folder, subject_id)
         makedirs(directory, exist_ok=True)
         output_fullpath = path.join(directory, visit_id, anat_folder_label, repetition_folder_name)

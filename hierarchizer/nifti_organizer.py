@@ -7,11 +7,13 @@ from glob import iglob
 from re import split
 
 
+# TODO: Use allow using output_folder_organization like in dicom_organizer
+
 def organize_nifti(args):
     logging.info("Organizing NIFTI files...")
-    if args.dataset.upper() == 'CLM':
+    if args.incoming_dataset.upper() == 'CLM':
         organize_nifti_clm(args.input_folder, args.output_folder)
-    elif args.dataset.upper() == 'EDSD':
+    elif args.incoming_dataset.upper() == 'EDSD':
         organize_nifti_edsd(args.input_folder, args.output_folder)
 
 

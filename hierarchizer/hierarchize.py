@@ -20,9 +20,9 @@ def main():
     args_parser = argparse.ArgumentParser()
     args_parser.add_argument("input_folder")
     args_parser.add_argument("output_folder")
-    args_parser.add_argument("--dataset", default="generic")
+    args_parser.add_argument("--incoming_dataset", default="generic")
     args_parser.add_argument("--type", default="DICOM")
-    args_parser.add_argument("--attributes",
+    args_parser.add_argument("--output_folder_organization",
                              nargs='+',
                              default=['PatientID', 'StudyID', 'SeriesDescription', 'SeriesNumber'])
     args_parser.add_argument("--unknown_value", default="unknown")
@@ -30,8 +30,8 @@ def main():
     args_parser.add_argument("--excluded_fields", nargs='+')
     args = args_parser.parse_args()
 
-    # If dataset is PPMI, force use of ppmi_xml_extension
-    if args.dataset.upper() == 'PPMI':
+    # If incoming_dataset is PPMI, force use of ppmi_xml_extension
+    if args.incoming_dataset.upper() == 'PPMI':
         logging.info("Enabling ppmi_xml_extension...")
         args.ppmi_xml_extension = True
 

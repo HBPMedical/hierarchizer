@@ -35,7 +35,7 @@ def main():
         args.ppmi_xml_extension = True
 
     # If excluded_fields is not defined, setup to default values
-    if args.excluded_fields:
+    if not args.excluded_fields:
         args.excluded_fields = []
         # If ppmi_xml_extension is enabled, exclude some default fields
         if args.ppmi_xml_extension:

@@ -7,7 +7,7 @@ from glob import iglob
 from re import split
 
 
-# TODO: Use allow using output_folder_organization like in dicom_organizer
+# TODO: Use allow using output_folder_organisation like in dicom_organizer
 
 def organize_nifti(args):
     logging.info("Organizing NIFTI files...")

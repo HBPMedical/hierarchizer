@@ -16,8 +16,11 @@ def organize_dicom(args):
             dcm = dicom.read_file(file_path)
             dest_path = args.output_folder
             for attribute in args.output_folder_organisation:
-                part = str(dcm.data_element(attribute).value)
-                if len(part.strip()) < 1 or attribute in args.excluded_fields:
+                try:
+                    part = str(dcm.data_element(attribute).value)
+                except AttributeError:
+                    part = None
+                if not part or len(part.strip()) < 1 or attribute in args.excluded_fields:
                     part = None
                     if args.ppmi_xml_extension:
                         part = ppmi_xml_extension.find(file_path, attribute)

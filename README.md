@@ -22,8 +22,8 @@ where:
   * -h, --help : show help
   * --dataset DATASET : Dataset code (CLM, EDSD, PPMI, ADNI)
   * --type TYPE : Type of image files (DICOM, NIFTI)
-  * --output_folder_organisation OUTPUT_FOLDER_ORGANISATION [OUTPUT_FOLDER_ORGANISATION ...] : list of DICOM fields to use as a folder hierarchy
-  (default=['PatientID', 'StudyID', 'SeriesDescription', 'SeriesNumber'])
+  * --output_folder_organisation OUTPUT_FOLDER_ORGANISATION : String containing DICOM fields to use to create 
+  the output folder hierarchy (default='#PatientID/#StudyID/#SeriesDescription/#SeriesNumber')
   * --unknown_value UNKNOWN_VALUE : value to use if a field cannot be found (default="unknown")
   * --ppmi_xml_extension : try to use meta-data from PPMI XML files if a field cannot be found in the DICOM files
   * --excluded_fields EXCLUDED_FIELDS [EXCLUDED_FIELDS ...]

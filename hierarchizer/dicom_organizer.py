@@ -15,7 +15,8 @@ def organize_dicom(args):
         try:
             dcm = dicom.read_file(file_path)
             dest_path = args.output_folder
-            for attribute in args.output_folder_organisation:
+            attributes = args.output_folder_organisation.replace('#', '').split('/')
+            for attribute in attributes:
                 try:
                     part = str(dcm.data_element(attribute).value)
                 except AttributeError:

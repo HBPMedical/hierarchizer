@@ -23,8 +23,7 @@ def main():
     args_parser.add_argument("--incoming_dataset", default="generic")
     args_parser.add_argument("--type", default="DICOM")
     args_parser.add_argument("--output_folder_organisation",
-                             nargs='+',
-                             default=['PatientID', 'StudyID', 'SeriesDescription', 'SeriesNumber'])
+                             default='#PatientID/#StudyID/#SeriesDescription/#SeriesNumber')
     args_parser.add_argument("--unknown_value", default="unknown")
     args_parser.add_argument("--ppmi_xml_extension", action='store_true')
     args_parser.add_argument("--excluded_fields", nargs='+')

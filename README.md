@@ -20,7 +20,7 @@ where:
 * <output_folder> is the folder that will contain the hierarchized DICOM/NIFTI files
 * options:
   * -h, --help : show help
-  * --dataset DATASET : Dataset code (CLM, EDSD, PPMI, ADNI)
+  * --incoming_dataset DATASET : Dataset code (CLM, EDSD, PPMI, ADNI)
   * --type TYPE : Type of image files (DICOM, NIFTI)
   * --output_folder_organisation OUTPUT_FOLDER_ORGANISATION : String containing DICOM fields to use to create 
   the output folder hierarchy (default='#PatientID/#StudyID/#SeriesDescription/#SeriesNumber')

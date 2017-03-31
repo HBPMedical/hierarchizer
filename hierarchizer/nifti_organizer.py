@@ -16,14 +16,17 @@ def organize_nifti(incoming_dataset, input_folder, output_folder, organisation):
     logging.info("Organizing NIFTI files...")
     if incoming_dataset.upper() == 'CLM':
         if not _is_organisation_allowed(organisation, CLM_NIFTI_ALLOWED_FIELDS):
+            logging.warning("Not enough information available: falling back to default organisation !")
             organisation = DEFAULT_ORGANIZATION
         organize_nifti_clm(input_folder, output_folder, organisation)
     elif incoming_dataset.upper() == 'EDSD':
         if not _is_organisation_allowed(organisation, EDSD_NIFTI_ALLOWED_FIELDS):
+            logging.warning("Not enough information available: falling back to default organisation !")
             organisation = DEFAULT_ORGANIZATION
         organize_nifti_edsd(input_folder, output_folder, organisation)
     elif incoming_dataset.upper() == 'ADNI':
         if not _is_organisation_allowed(organisation, ADNI_NIFTI_ALLOWED_FIELDS):
+            logging.warning("Not enough information available: falling back to default organisation !")
             organisation = DEFAULT_ORGANIZATION
         organize_nifti_adni(input_folder, output_folder, organisation)
 

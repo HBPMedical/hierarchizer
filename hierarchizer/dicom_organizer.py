@@ -9,28 +9,25 @@ from dicom.errors import InvalidDicomError  # pydicom.errors.InvalidDicomError
 from . import ppmi_xml_extension
 
 
-def organize_dicom(args):
+def organize_dicom(input_folder, output_folder, organisation, excluded_fields, use_ppmi_xml_extension, unknown_value):
     logging.info("Organizing DICOM files...")
-    for file_path in iglob(path.join(args.input_folder, "**/*"), recursive=True):
+    for file_path in iglob(path.join(input_folder, "**/*"), recursive=True):
         try:
             dcm = dicom.read_file(file_path)
-            dest_path = args.output_folder
-            attributes = args.output_folder_organisation.replace('#', '').split('/')
-            for attribute in attributes:
+            for attribute in organisation:
                 try:
                     part = str(dcm.data_element(attribute).value)
                 except AttributeError:
                     part = None
-                if not part or len(part.strip()) < 1 or attribute in args.excluded_fields:
+                if not part or len(part.strip()) < 1 or attribute in excluded_fields:
                     part = None
-                    if args.ppmi_xml_extension:
+                    if use_ppmi_xml_extension:
                         part = ppmi_xml_extension.find(file_path, attribute)
                     if not part:
-                        part = args.unknown_value
-                dest_path += "/" + part
-            dest_path = path.normpath(dest_path)
-            makedirs(dest_path, exist_ok=True)
-            logging.info("Copying %s to %s..." % (file_path, dest_path))
-            copy2(file_path, dest_path)
+                        part = unknown_value
+                output_folder = path.join(output_folder, part)
+            makedirs(output_folder, exist_ok=True)
+            logging.info("Copying %s to %s..." % (file_path, output_folder))
+            copy2(file_path, output_folder)
         except (IsADirectoryError, InvalidDicomError):
             pass

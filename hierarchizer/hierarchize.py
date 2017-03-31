@@ -29,6 +29,8 @@ def main():
     args_parser.add_argument("--excluded_fields", nargs='+')
     args = args_parser.parse_args()
 
+    organisation = args.output_folder_organisation.replace('#', '').split('/')
+
     # If incoming_dataset is PPMI, force use of ppmi_xml_extension
     if args.incoming_dataset.upper() == 'PPMI':
         logging.info("Enabling ppmi_xml_extension...")
@@ -43,9 +45,11 @@ def main():
             args.excluded_fields = list(ppmi_xml_extension.MAPPING.keys())
 
     if args.type.upper() in ['DICOM', 'DCM']:
-        dicom_organizer.organize_dicom(args)
+        dicom_organizer.organize_dicom(
+            args.input_folder, args.output_folder, organisation, args.excluded_fields, args.ppmi_xml_extension,
+            args.unknown_value)
     elif args.type.upper() in ['NIFTI', 'NII']:
-        nifti_organizer.organize_nifti(args)
+        nifti_organizer.organize_nifti(args.incoming_dataset, args.input_folder, args.output_folder, organisation)
 
 
 if __name__ == '__main__':

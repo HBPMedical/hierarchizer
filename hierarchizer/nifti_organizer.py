@@ -48,7 +48,7 @@ def organize_nifti_clm(input_folder, output_folder, organisation):
 
         output_fullpath = output_folder
         for attribute in organisation:
-            output_fullpath += path.join(output_fullpath, metadata[attribute])
+            output_fullpath = path.join(output_fullpath, metadata[attribute])
 
         makedirs(output_fullpath, exist_ok=True)
         logging.info("Copying %s to %s..." % (nii_file, output_fullpath))
@@ -89,7 +89,7 @@ def organize_nifti_edsd(input_folder, output_folder, organisation):
         for f in iglob(extracted_fullpath + "/**.nii", recursive=True):
             output_fullpath = output_folder
             for attribute in organisation:
-                output_fullpath += path.join(output_fullpath, metadata[attribute])
+                output_fullpath = path.join(output_fullpath, metadata[attribute])
             makedirs(output_fullpath, exist_ok=True)
             shutil.move(f, output_fullpath)
         shutil.rmtree(extracted_fullpath)
@@ -110,7 +110,7 @@ def organize_nifti_adni(input_folder, output_folder, organisation):
 
         output_fullpath = output_folder
         for attribute in organisation:
-            output_fullpath += path.join(output_fullpath, metadata[attribute])
+            output_fullpath = path.join(output_fullpath, metadata[attribute])
 
         makedirs(output_fullpath, exist_ok=True)
         logging.info("Copying %s to %s..." % (nii_file, output_fullpath))

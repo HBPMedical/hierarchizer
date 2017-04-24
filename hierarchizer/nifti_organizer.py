@@ -3,6 +3,7 @@ import shutil
 from os import path
 from os import makedirs
 from os import listdir
+from os.path import isdir
 from glob import iglob
 from re import split
 
@@ -86,13 +87,14 @@ def organize_nifti_edsd(input_folder, output_folder, organisation):
         tar.close()
 
         extracted_fullpath = path.join(output_fullpath, listdir(output_fullpath)[0])
-        for f in iglob(extracted_fullpath + "/**.nii", recursive=True):
-            output_fullpath = output_folder
-            for attribute in organisation:
-                output_fullpath = path.join(output_fullpath, metadata[attribute])
-            makedirs(output_fullpath, exist_ok=True)
-            shutil.move(f, output_fullpath)
-        shutil.rmtree(extracted_fullpath)
+        if isdir(extracted_fullpath):
+            for f in iglob(extracted_fullpath + "/**.nii", recursive=True):
+                output_fullpath = output_folder
+                for attribute in organisation:
+                    output_fullpath = path.join(output_fullpath, metadata[attribute])
+                makedirs(output_fullpath, exist_ok=True)
+                shutil.move(f, output_fullpath)
+            shutil.rmtree(extracted_fullpath)
 
     logging.info("DONE")
 

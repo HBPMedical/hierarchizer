@@ -13,14 +13,15 @@ and/or external meta-data files (e.g. XML files fro PPMI).
 
 ## Usage
 
-Run: `docker run --rm -v <input_folder>:/input_folder -v <output_folder>:/output_folder hbpmip/hierarchizer [options]`
+Run: `docker run --rm -v <input_folder>:/input_folder -v <output_folder>:/output_folder -v <meta_output_folder>:/meta_output_folder hbpmip/hierarchizer <incoming_dataset> [options]`
 
 where:
 * <input_folder> is the folder containing the input DICOM/NIFTI files
 * <output_folder> is the folder that will contain the hierarchized DICOM/NIFTI files
+* <meta_output_folder> is the folder that will contain the metadata files
+* <incoming_dataset> is the dataset name (e.g. CLM, EDSD, PPMI, ADNI)
 * options:
   * -h, --help : show help
-  * --incoming_dataset DATASET : Dataset code (CLM, EDSD, PPMI, ADNI)
   * --type TYPE : Type of image files (DICOM, NIFTI)
   * --output_folder_organisation OUTPUT_FOLDER_ORGANISATION : String containing DICOM fields to use to create
   the output folder hierarchy (default='#PatientID/#StudyID/#SeriesDescription/#SeriesNumber')

@@ -5,6 +5,9 @@ import logging
 import os
 import sys
 
+from os.path import join
+from os import makedirs
+
 PACKAGE_PARENT = '..'
 SCRIPT_DIR = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
 sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
@@ -14,42 +17,66 @@ from hierarchizer import dicom_organizer
 from hierarchizer import nifti_organizer
 
 
+######################################################################################################################
+# DEFAULT SETTINGS
+######################################################################################################################
+
+DEFAULT_TYPES = {'CLM': 'NIFTI', 'EDSD': 'NIFTI', 'PPMI': 'DICOM', 'ADNI': 'NIFTI'}
+DEFAULT_ORGANISATION = '#PatientID/#StudyID/#SeriesDescription/#SeriesNumber'
+DEFAULT_UNKNOWN_VALUE = 'unknown'
+
+
+######################################################################################################################
+# DEFAULT SETTINGS
+######################################################################################################################
+
 def main():
     logging.basicConfig(level=logging.INFO)
 
     args_parser = argparse.ArgumentParser()
     args_parser.add_argument("input_folder")
     args_parser.add_argument("output_folder")
-    args_parser.add_argument("--incoming_dataset", default="generic")
-    args_parser.add_argument("--type", default="DICOM")
-    args_parser.add_argument("--output_folder_organisation",
-                             default='#PatientID/#StudyID/#SeriesDescription/#SeriesNumber')
-    args_parser.add_argument("--unknown_value", default="unknown")
+    args_parser.add_argument("meta_output_folder")
+    args_parser.add_argument("incoming_dataset")
+    args_parser.add_argument("--type", nargs=1)
+    args_parser.add_argument("--output_folder_organisation", default=DEFAULT_ORGANISATION)
+    args_parser.add_argument("--unknown_value", default=DEFAULT_UNKNOWN_VALUE)
     args_parser.add_argument("--ppmi_xml_extension", action='store_true')
     args_parser.add_argument("--excluded_fields", nargs='+')
     args = args_parser.parse_args()
 
     organisation = args.output_folder_organisation.replace('#', '').split('/')
 
-    # If incoming_dataset is PPMI, force use of ppmi_xml_extension
-    if args.incoming_dataset.upper() == 'PPMI':
-        logging.info("Enabling ppmi_xml_extension...")
-        args.ppmi_xml_extension = True
+    input_folder = args.input_folder
+    output_folder = args.output_folder
+    meta_output_folder = args.meta_output_folder
+    dataset = args.incoming_dataset.upper()
+    data_type = args.type
+    unknown_value = args.unknown_value
+    ppmi_ext_enabled = args.ppmi_xml_extension
+    excl_fields = args.excluded_fields if args.excluded_fields else []
 
-    # If excluded_fields is not defined, setup to default values
-    if not args.excluded_fields:
-        args.excluded_fields = []
-        # If ppmi_xml_extension is enabled, exclude some default fields
-        if args.ppmi_xml_extension:
-            logging.info("Using ppmi_xml_extension default...")
-            args.excluded_fields = list(ppmi_xml_extension.MAPPING.keys())
+    makedirs(output_folder, exist_ok=True)
+    makedirs(meta_output_folder, exist_ok=True)
 
-    if args.type.upper() in ['DICOM', 'DCM']:
+    if not data_type:
+        data_type = DEFAULT_TYPES[dataset]
+        logging.info("Auto-configuration : type = %s", data_type)
+    data_type = data_type.upper()
+
+    if dataset == 'PPMI':
+        ppmi_ext_enabled = True
+        logging.info("Auto-configuration : ppmi_xml_extension = enabled")
+
+    if ppmi_ext_enabled:
+        excl_fields.extend(list(ppmi_xml_extension.MAPPING.keys()))
+        logging.info("Auto-configuration : append default PPMI excluded-fields")
+
+    if data_type in ['DICOM', 'DCM']:
         dicom_organizer.organize_dicom(
-            args.input_folder, args.output_folder, organisation, args.excluded_fields, args.ppmi_xml_extension,
-            args.unknown_value)
-    elif args.type.upper() in ['NIFTI', 'NII']:
-        nifti_organizer.organize_nifti(args.incoming_dataset, args.input_folder, args.output_folder, organisation)
+            input_folder, output_folder, organisation, excl_fields, ppmi_ext_enabled, unknown_value)
+    elif data_type in ['NIFTI', 'NII']:
+        nifti_organizer.organize_nifti(dataset, input_folder, output_folder, organisation, meta_output_folder)
 
 
 if __name__ == '__main__':

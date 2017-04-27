@@ -13,26 +13,26 @@ EDSD_NIFTI_ALLOWED_FIELDS = ['PatientID', 'StudyID', 'SeriesDescription', 'Serie
 ADNI_NIFTI_ALLOWED_FIELDS = ['PatientID', 'StudyID', 'SeriesDescription', 'SeriesNumber']
 
 
-def organize_nifti(incoming_dataset, input_folder, output_folder, organisation):
+def organize_nifti(incoming_dataset, input_folder, output_folder, organisation, meta_output_folder):
     logging.info("Organizing NIFTI files...")
-    if incoming_dataset.upper() == 'CLM':
+    if incoming_dataset == 'CLM':
         if not _is_organisation_allowed(organisation, CLM_NIFTI_ALLOWED_FIELDS):
             logging.warning("Not enough information available: falling back to default organisation !")
             organisation = DEFAULT_ORGANIZATION
-        organize_nifti_clm(input_folder, output_folder, organisation)
-    elif incoming_dataset.upper() == 'EDSD':
+        organize_nifti_clm(input_folder, output_folder, organisation, meta_output_folder)
+    elif incoming_dataset == 'EDSD':
         if not _is_organisation_allowed(organisation, EDSD_NIFTI_ALLOWED_FIELDS):
             logging.warning("Not enough information available: falling back to default organisation !")
             organisation = DEFAULT_ORGANIZATION
-        organize_nifti_edsd(input_folder, output_folder, organisation)
-    elif incoming_dataset.upper() == 'ADNI':
+        organize_nifti_edsd(input_folder, output_folder, organisation, meta_output_folder)
+    elif incoming_dataset == 'ADNI':
         if not _is_organisation_allowed(organisation, ADNI_NIFTI_ALLOWED_FIELDS):
             logging.warning("Not enough information available: falling back to default organisation !")
             organisation = DEFAULT_ORGANIZATION
-        organize_nifti_adni(input_folder, output_folder, organisation)
+        organize_nifti_adni(input_folder, output_folder, organisation, meta_output_folder)
 
 
-def organize_nifti_clm(input_folder, output_folder, organisation):
+def organize_nifti_clm(input_folder, output_folder, organisation, meta_output_folder):
     logging.info("Call to organize_nifti_clm")
 
     default_protocol = "T1_mprage"
@@ -55,10 +55,13 @@ def organize_nifti_clm(input_folder, output_folder, organisation):
         logging.info("Copying %s to %s..." % (nii_file, output_fullpath))
         shutil.copy2(nii_file, output_fullpath)
 
+    meta_file = next(iglob(path.join(input_folder, '**/public_output.xlsx'), recursive=True))
+    shutil.copy2(meta_file, meta_output_folder)
+
     logging.info("DONE")
 
 
-def organize_nifti_edsd(input_folder, output_folder, organisation):
+def organize_nifti_edsd(input_folder, output_folder, organisation, meta_output_folder):
     logging.info("Call to organize_nifti_edsd")
 
     for archive_path in iglob(path.join(input_folder, "**/*.tar.bz2"), recursive=True):
@@ -86,6 +89,9 @@ def organize_nifti_edsd(input_folder, output_folder, organisation):
         tar.extractall(path=output_fullpath)
         tar.close()
 
+        for meta_file in iglob(path.join(output_fullpath, "**/*.txt"), recursive=True):
+            shutil.move(meta_file, meta_output_folder)
+
         extracted_fullpath = path.join(output_fullpath, listdir(output_fullpath)[0])
         if isdir(extracted_fullpath):
             for f in iglob(extracted_fullpath + "/**.nii", recursive=True):
@@ -99,8 +105,9 @@ def organize_nifti_edsd(input_folder, output_folder, organisation):
     logging.info("DONE")
 
 
-def organize_nifti_adni(input_folder, output_folder, organisation):
+def organize_nifti_adni(input_folder, output_folder, organisation, meta_output_folder):
     logging.info("Call to organize_nifti_adni")
+
     for nii_file in iglob(path.join(input_folder, "**/*.nii"), recursive=True):
         f_name = split(r'[_]+', path.basename(nii_file))
 
@@ -117,6 +124,11 @@ def organize_nifti_adni(input_folder, output_folder, organisation):
         makedirs(output_fullpath, exist_ok=True)
         logging.info("Copying %s to %s..." % (nii_file, output_fullpath))
         shutil.copy2(nii_file, output_fullpath)
+
+    for meta_file in iglob(path.join(input_folder, "**/*.xml"), recursive=True):
+        shutil.move(meta_file, meta_output_folder)
+
+    logging.info("DONE")
 
 
 def _is_organisation_allowed(organisation, allowed_fields):

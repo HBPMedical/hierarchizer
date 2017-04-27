@@ -9,6 +9,7 @@ RUN pip install -r requirements.txt
 
 VOLUME /input_folder
 VOLUME /output_folder
+VOLUME /meta_output_folder
 
 WORKDIR /
-ENTRYPOINT ["python", "/hierarchizer/hierarchize.py", "/input_folder", "/output_folder"]
+ENTRYPOINT ["python", "/hierarchizer/hierarchize.py", "/input_folder", "/output_folder", "/meta_output_folder"]

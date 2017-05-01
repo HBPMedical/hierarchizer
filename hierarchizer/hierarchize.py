@@ -38,7 +38,7 @@ def main():
     args_parser.add_argument("output_folder")
     args_parser.add_argument("meta_output_folder")
     args_parser.add_argument("incoming_dataset")
-    args_parser.add_argument("--type", nargs=1)
+    args_parser.add_argument("--type", nargs='?')
     args_parser.add_argument("--output_folder_organisation", default=DEFAULT_ORGANISATION)
     args_parser.add_argument("--unknown_value", default=DEFAULT_UNKNOWN_VALUE)
     args_parser.add_argument("--ppmi_xml_extension", action='store_true')

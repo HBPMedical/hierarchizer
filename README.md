@@ -1,15 +1,11 @@
-[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](https://github.com/LREN-CHUV/hierarchizer/blob/master/LICENSE)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/c1e88d79ac484390b612924aedc1597b)](https://www.codacy.com/app/mirco-nasuti/hierarchizer?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=LREN-CHUV/hierarchizer&amp;utm_campaign=Badge_Grade) [![CHUV](https://img.shields.io/badge/CHUV-LREN-AF4C64.svg)](https://www.unil.ch/lren/en/home.html)
-
+[![CHUV](https://img.shields.io/badge/CHUV-LREN-AF4C64.svg)](https://www.unil.ch/lren/en/home.html) [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](https://github.com/LREN-CHUV/hierarchizer/blob/master/LICENSE) [![DockerHub](https://img.shields.io/badge/docker-hbpmip%2Fhierarchizer-008bb8.svg)](https://hub.docker.com/r/hbpmip/hierarchizer/) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/830355fa4faa47169b44572ec43f6fea)](https://www.codacy.com/app/hbp-mip/hierarchizer?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=LREN-CHUV/hierarchizer&amp;utm_campaign=Badge_Grade)
 
 # Hierarchizer
-
 
 ## Introduction
 
 Docker container containing Python scripts that reorganize DICOM files creating a folder hierarchy from meta-data found in DICOM files
 and/or external meta-data files (e.g. XML files fro PPMI).
-
 
 ## Usage
 
@@ -37,4 +33,4 @@ Run: `./build.sh`
 
 ## Publish
 
-Run: `./docker_push.sh`
+Run: `./publish.sh`

@@ -69,7 +69,7 @@ def organize_nifti_edsd(input_folder, output_folder, organisation, meta_output_f
 
         file_info = split(r'[+.]+', path.basename(archive_path))
         prefix = file_info[0] + '+'
-        site = file_info[2]
+        site = file_info[2][:3]
         sid_per_site = file_info[3]
         proto = file_info[4]
 

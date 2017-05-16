@@ -99,6 +99,14 @@ def organize_nifti_edsd(input_folder, output_folder, organisation, meta_output_f
                 for attribute in organisation:
                     output_fullpath = path.join(output_fullpath, metadata[attribute])
                 makedirs(output_fullpath, exist_ok=True)
+
+                # Fix output filename as there are errors in original ones
+                file_parts = split(r'[+.]+', path.basename(f))
+                file_parts[2] = file_parts[2][:3]
+                file_name = '+'.join(file_parts) + '.nii'
+                # end fix
+
+                output_fullpath = path.join(output_fullpath, file_name)
                 shutil.move(f, output_fullpath)
             shutil.rmtree(extracted_fullpath)
 

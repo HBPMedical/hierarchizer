@@ -90,7 +90,8 @@ def organize_nifti_edsd(input_folder, output_folder, organisation, meta_output_f
         tar.close()
 
         for meta_file in iglob(path.join(output_fullpath, "**/*.txt"), recursive=True):
-            shutil.move(meta_file, meta_output_folder)
+            meta_filename = _fix_edsd_site_in_filename(path.basename(meta_file))
+            shutil.move(meta_file, path.join(meta_output_folder, meta_filename))
 
         extracted_fullpath = path.join(output_fullpath, listdir(output_fullpath)[0])
         if isdir(extracted_fullpath):
@@ -99,14 +100,8 @@ def organize_nifti_edsd(input_folder, output_folder, organisation, meta_output_f
                 for attribute in organisation:
                     output_fullpath = path.join(output_fullpath, metadata[attribute])
                 makedirs(output_fullpath, exist_ok=True)
-
-                # Fix output filename as there are errors in original ones
-                file_parts = split(r'[+.]+', path.basename(f))
-                file_parts[2] = file_parts[2][:3]
-                file_name = '+'.join(file_parts) + '.nii'
-                # end fix
-
-                output_fullpath = path.join(output_fullpath, file_name)
+                output_filename = _fix_edsd_site_in_filename(path.basename(f))
+                output_fullpath = path.join(output_fullpath, output_filename)
                 shutil.move(f, output_fullpath)
             shutil.rmtree(extracted_fullpath)
 
@@ -137,6 +132,14 @@ def organize_nifti_adni(input_folder, output_folder, organisation, meta_output_f
         shutil.move(meta_file, meta_output_folder)
 
     logging.info("DONE")
+
+
+def _fix_edsd_site_in_filename(filename):
+    file_parts = split(r'[+]+', filename)
+    file_parts[2] = file_parts[2][:3]
+    file_parts[-1] = file_parts[-1][:3]
+    fixed_filename = '+'.join(file_parts) + '.nii'
+    return fixed_filename
 
 
 def _is_organisation_allowed(organisation, allowed_fields):

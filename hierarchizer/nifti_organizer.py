@@ -135,11 +135,15 @@ def organize_nifti_adni(input_folder, output_folder, organisation, meta_output_f
 
 
 def _fix_edsd_site_in_filename(filename):
-    file_parts = split(r'[+]+', filename)
-    file_parts[2] = file_parts[2][:3]
-    file_parts[-1] = file_parts[-1][:3]
-    fixed_filename = '+'.join(file_parts) + '.nii'
-    return fixed_filename
+    try:
+        file_parts = split(r'[+]+', filename)
+        file_parts[2] = file_parts[2][:3]
+        file_parts[-1] = file_parts[-1][:3]
+        fixed_filename = '+'.join(file_parts) + '.nii'
+        return fixed_filename
+    except IndexError:
+        logging.info("Cannot fix filename for %s", filename)
+        return filename
 
 
 def _is_organisation_allowed(organisation, allowed_fields):

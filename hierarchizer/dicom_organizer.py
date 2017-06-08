@@ -27,6 +27,7 @@ def organize_dicom(input_folder, output_folder, organisation, excluded_fields, u
                     if not part:
                         part = unknown_value
                 output_fullpath = path.join(output_fullpath, part)
+                output_fullpath = output_fullpath.replace('*', '_')
             makedirs(output_fullpath, exist_ok=True)
             logging.info("Copying %s to %s..." % (file_path, output_fullpath))
             copy2(file_path, output_fullpath)

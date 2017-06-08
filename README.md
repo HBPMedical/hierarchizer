@@ -34,3 +34,8 @@ Run: `./build.sh`
 ## Publish
 
 Run: `./publish.sh`
+
+
+## NOTE
+
+Any '*' symbol in the output path is replaced by an '_' symbol.

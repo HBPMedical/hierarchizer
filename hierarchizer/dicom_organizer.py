@@ -26,7 +26,7 @@ def organize_dicom(input_folder, output_folder, organisation, excluded_fields, u
                         part = ppmi_xml_extension.find(file_path, attribute)
                     if not part:
                         part = unknown_value
-                output_fullpath = path.join(output_fullpath, part)
+                output_fullpath = path.join(output_fullpath, part.replace('/', '_'))
                 output_fullpath = output_fullpath.replace('*', '_')
             makedirs(output_fullpath, exist_ok=True)
             logging.info("Copying %s to %s..." % (file_path, output_fullpath))

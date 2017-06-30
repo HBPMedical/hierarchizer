@@ -24,7 +24,7 @@ where:
   * --unknown_value UNKNOWN_VALUE : value to use if a field cannot be found (default="unknown")
   * --ppmi_xml_extension : try to use meta-data from PPMI XML files if a field cannot be found in the DICOM files
   * --excluded_fields EXCLUDED_FIELDS [EXCLUDED_FIELDS ...]
-
+  * --allowed_field_values FIELD=VALUE1,VALUE2,VALUE3 [FIELD=VALUE1,VALUE2 ...] : ignore input files containing values outside of the range of allowed field values.
 
 ## Build
 

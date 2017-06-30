@@ -1,7 +1,6 @@
 import logging
 from glob import iglob
-from os import path
-from os import makedirs
+from os import path, makedirs, IsADirectoryError
 from shutil import copy2
 import dicom  # pydicom
 from dicom.errors import InvalidDicomError  # pydicom.errors.InvalidDicomError
@@ -9,7 +8,8 @@ from dicom.errors import InvalidDicomError  # pydicom.errors.InvalidDicomError
 from . import ppmi_xml_extension
 
 
-def organize_dicom(input_folder, output_folder, organisation, excluded_fields, use_ppmi_xml_extension, unknown_value):
+def organize_dicom(input_folder, output_folder, organisation, excluded_fields, use_ppmi_xml_extension,
+                   unknown_value, allowed_field_values):
     logging.info("Organizing DICOM files...")
     for file_path in iglob(path.join(input_folder, "**/*"), recursive=True):
         output_fullpath = output_folder
@@ -26,6 +26,11 @@ def organize_dicom(input_folder, output_folder, organisation, excluded_fields, u
                         part = ppmi_xml_extension.find(file_path, attribute)
                     if not part:
                         part = unknown_value
+                if attribute in allowed_field_values:
+                    if part in allowed_field_values[attribute]:
+                        logging.info("Skipping files in %s..." % output_fullpath)
+                        continue
+
                 output_fullpath = path.join(output_fullpath, part.replace('/', '_'))
                 output_fullpath = output_fullpath.replace('*', '_')
             makedirs(output_fullpath, exist_ok=True)

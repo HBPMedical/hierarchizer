@@ -8,13 +8,13 @@ import sys
 from os.path import join
 from os import makedirs
 
-PACKAGE_PARENT = '..'
-SCRIPT_DIR = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
-sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
-
 from hierarchizer import ppmi_xml_extension
 from hierarchizer import dicom_organizer
 from hierarchizer import nifti_organizer
+
+PACKAGE_PARENT = '..'
+SCRIPT_DIR = os.path.dirname(os.path.realpath(join(os.getcwd(), os.path.expanduser(__file__))))
+sys.path.append(os.path.normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
 
 
 ######################################################################################################################
@@ -43,6 +43,7 @@ def main():
     args_parser.add_argument("--unknown_value", default=DEFAULT_UNKNOWN_VALUE)
     args_parser.add_argument("--ppmi_xml_extension", action='store_true')
     args_parser.add_argument("--excluded_fields", nargs='+')
+    args_parser.add_argument("--allowed_field_values", nargs='+')
     args = args_parser.parse_args()
 
     organisation = args.output_folder_organisation.replace('#', '').split('/')
@@ -55,6 +56,10 @@ def main():
     unknown_value = args.unknown_value
     ppmi_ext_enabled = args.ppmi_xml_extension
     excl_fields = args.excluded_fields if args.excluded_fields else []
+    allowed_field_values = {}
+    for v in (args.allowed_field_values if args.allowed_field_values else []):
+        field, allowed_values = v.split('=')
+        allowed_field_values[field] = allowed_values.split(',')
 
     makedirs(output_folder, exist_ok=True)
     makedirs(meta_output_folder, exist_ok=True)
@@ -74,7 +79,8 @@ def main():
 
     if data_type in ['DICOM', 'DCM']:
         dicom_organizer.organize_dicom(
-            input_folder, output_folder, organisation, excl_fields, ppmi_ext_enabled, unknown_value)
+            input_folder, output_folder, organisation, excl_fields, ppmi_ext_enabled,
+            unknown_value, allowed_field_values)
     elif data_type in ['NIFTI', 'NII']:
         nifti_organizer.organize_nifti(dataset, input_folder, output_folder, organisation, meta_output_folder)
 

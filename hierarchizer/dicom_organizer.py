@@ -27,8 +27,8 @@ def organize_dicom(input_folder, output_folder, organisation, excluded_fields, u
                     if not part:
                         part = unknown_value
                 if attribute in allowed_field_values:
-                    if part in allowed_field_values[attribute]:
-                        logging.info("Skipping files in %s..." % output_fullpath)
+                    if not (part in allowed_field_values[attribute]):
+                        logging.info("Skipping file %s..." % file_path)
                         continue
 
                 output_fullpath = path.join(output_fullpath, part.replace('/', '_'))

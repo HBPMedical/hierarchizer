@@ -1,0 +1,79 @@
+name: hierarchizer
+description: "Reoranize DICOM or Nifti files using DICOM headers or metadata files"
+
+long_description: |
+  Docker container containing Python scripts that reorganize DICOM files creating a folder hierarchy from meta-data found in DICOM files
+  and/or external meta-data files (e.g. XML files fro PPMI).
+
+
+authors:
+  - author: Mirco Nasuti
+    author_email:
+      - mirco.nasuti@chuv.ch
+    organisation: LREN-CHUV
+    organisation_badge: https://img.shields.io/badge/CHUV-LREN-AF4C64.svg
+
+platform: MIP
+component:
+  mip_building_block: data-factory
+  nature: tool
+
+license:
+  name: Apache 2.0
+  badge: https://img.shields.io/badge/license-Apache--2.0-blue.svg
+  url: https://github.com/LREN-CHUV/hierarchizer/blob/master/LICENSE
+
+code_repositories:
+  - name: chuv-gitlab
+    visibility: private
+    url: https://___.chuv.ch/data-factory/hierarchizer/
+    git_clone: https://___.chuv.ch/data-factory/hierarchizer.git
+  - name: github/LREN-CHUV
+    visibility: public
+    url: https://github.io/LREN-CHUV/hierarchizer/
+    git_clone: https://github.io/LREN-CHUV/hierarchizer.git
+  - name: github/HBPMedical
+    visibility: public
+    url: https://github.io/HBPMedical/hierarchizer/
+    git_clone: https://github.io/HBPMedical/hierarchizer.git
+
+code_quality_checks:
+  codacy:
+    badge: https://api.codacy.com/project/badge/Grade/830355fa4faa47169b44572ec43f6fea
+    url: "https://www.codacy.com/app/hbp-mip/hierarchizer?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=LREN-CHUV/hierarchizer&amp;utm_campaign=Badge_Grade"
+
+testing: []
+
+release_management:
+  current_version: 1.2.10
+  current_code_release: https://github.com/HBPMedical/hierarchizer/archive/1.2.10.zip
+  current_docker_release: docker pull hbpmip/hierarchizer:1.2.10
+  release_script: 'publish.sh'
+
+continuous_integration:
+  - name: CircleCI
+    description: "Check style and execute unit tests"
+    url: https://circleci.com/gh/LREN-CHUV/hierarchizer
+    badge: https://circleci.com/gh/LREN-CHUV/hierarchizer.svg?style=svg
+    actions:
+      - code_style
+      - unit_tests
+
+distribution:
+  docker_hub:
+    name: hbpmip/hierarchizer
+    current_tag: 1.2.10
+    url: https://hub.docker.com/r/hbpmip/hierarchizer/
+    badge: https://img.shields.io/badge/docker-hbpmip%2Fhierarchizer-008bb8.svg
+    command: docker pull hbpmip/hierarchizer:1.2.10
+
+planning:
+  github:
+    name: Issues on Github
+    url: https://github.com/LREN-CHUV/hierarchizer/issues
+
+related_projects:
+  - name: data-factory-airflow-dags
+    mip_building_block: data-factory
+    relationship: other-depends-on
+    relationship_scope: runtime

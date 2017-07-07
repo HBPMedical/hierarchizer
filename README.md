@@ -4,8 +4,8 @@
 
 ## Introduction
 
-Docker container containing Python scripts that reorganize DICOM files creating a folder hierarchy from meta-data found in DICOM files
-and/or external meta-data files (e.g. XML files fro PPMI).
+Docker container containing Python scripts that reorganize DICOM files creating a folder hierarchy using meta-data found in DICOM files
+and/or external meta-data files (e.g. XML files from PPMI).
 
 ## Usage
 

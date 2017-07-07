@@ -1,6 +1,6 @@
 import logging
 from glob import iglob
-from os import path, makedirs, IsADirectoryError
+from os import path, makedirs
 from shutil import copy2
 import dicom  # pydicom
 from dicom.errors import InvalidDicomError  # pydicom.errors.InvalidDicomError

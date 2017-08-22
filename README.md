@@ -9,7 +9,7 @@ and/or external meta-data files (e.g. XML files from PPMI).
 
 ## Usage
 
-Run: `docker run --rm -v <input_folder>:/input_folder -v <output_folder>:/output_folder -v <meta_output_folder>:/meta_output_folder hbpmip/hierarchizer <incoming_dataset> [options]`
+Run: `docker run --rm -v <input_folder>:/input_folder -v <output_folder>:/output_folder -v <meta_output_folder>:/meta_output_folder hbpmip/hierarchizer:1.3.2 <incoming_dataset> [options]`
 
 where:
 * <input_folder> is the folder containing the input DICOM/NIFTI files

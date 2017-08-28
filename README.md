@@ -26,6 +26,15 @@ where:
   * --excluded_fields EXCLUDED_FIELDS [EXCLUDED_FIELDS ...]
   * --allowed_field_values FIELD=VALUE1,VALUE2,VALUE3 [FIELD=VALUE1,VALUE2 ...] : ignore input files containing values outside of the range of allowed field values.
 
+Example:
+```
+  docker run --rm \
+    -v $(pwd)/original:/input_folder
+    -v $(pwd)/hierarchized:/output_folder \
+    -v $(pwd)/hierarchized/meta:/meta_output_folder \
+    hbpmip/hierarchizer:1.3.2 MyDataset --type DICOM
+```
+
 ## Build
 
 Run: `./build.sh`

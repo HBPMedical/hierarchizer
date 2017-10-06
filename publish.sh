@@ -13,18 +13,26 @@ get_script_dir () {
      pwd
 }
 
-export WORKSPACE=$(get_script_dir)
+WORKSPACE=$(get_script_dir)
 
 if pgrep -lf sshuttle > /dev/null ; then
   echo "sshuttle detected. Please close this program as it messes with networking and prevents builds inside Docker to work"
   exit 1
 fi
 
-if groups $USER | grep &>/dev/null '\bdocker\b'; then
+if [ $NO_SUDO ]; then
+  CAPTAIN="captain"
+elif groups $USER | grep &>/dev/null '\bdocker\b'; then
   CAPTAIN="captain"
 else
   CAPTAIN="sudo captain"
 fi
+
+# Build
+echo "Build the project..."
+./build.sh
+./tests/test.sh
+echo "[ok] Done"
 
 count=$(git status --porcelain | wc -l)
 if test $count -gt 0; then
@@ -55,8 +63,7 @@ select_part() {
 git pull --tags
 # Look for a version tag in Git. If not found, ask the user to provide one
 [ $(git tag --points-at HEAD | wc -l) == 1 ] || (
-  latest_version=$(git describe --abbrev=00 || \
-    (bumpversion --dry-run --list patch | grep current_version | sed -r s,"^.*=",,) || echo '0.0.1')
+  latest_version=$(bumpversion --dry-run --list patch | grep current_version | sed -r s,"^.*=",, || echo '0.0.1')
   echo
   echo "Current commit has not been tagged with a version. Latest known version is $latest_version."
   echo
@@ -76,15 +83,26 @@ git pull --tags
   fi
 )
 
+updated_version=$(bumpversion --dry-run --list patch | grep current_version | sed -r s,"^.*=",,)
+
+# Build again to update the version
+echo "Build the project for distribution..."
+./build.sh
+./tests/test.sh
+echo "[ok] Done"
+
 git push
 git push --tags
-updated_version=$(bumpversion --dry-run --list patch | grep current_version | sed -r s,"^.*=",,)
+# Push on Docker Hub
 #  WARNING: Requires captain 1.1.0 to push user tags
-BUILD_DATE=$(date --iso-8601=seconds) VCS_REF=$updated_version $CAPTAIN push hierarchizer --branch-tags=false --commit-tags=false --tag $updated_version
+BUILD_DATE=$(date -Iseconds) \
+  VCS_REF=$updated_version \
+  VERSION=$updated_version \
+  WORKSPACE=$WORKSPACE \
+  $CAPTAIN push target_image --branch-tags=false --commit-tags=false --tag $updated_version
 
 # Notify on slack
 sed "s/USER/${USER^}/" $WORKSPACE/slack.json > $WORKSPACE/.slack.json
 sed -i.bak "s/VERSION/$updated_version/" $WORKSPACE/.slack.json
 curl -k -X POST --data-urlencode payload@$WORKSPACE/.slack.json https://hbps1.chuv.ch/slack/dev-activity
-rm -f $WORKSPACE/.slack.json
-rm -f $WORKSPACE/.slack.json.bak
+rm -f $WORKSPACE/.slack.json $WORKSPACE/.slack.json.bak

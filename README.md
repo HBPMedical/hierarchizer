@@ -1,4 +1,5 @@
 [![CHUV](https://img.shields.io/badge/CHUV-LREN-AF4C64.svg)](https://www.unil.ch/lren/en/home.html) [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](https://github.com/LREN-CHUV/hierarchizer/blob/master/LICENSE) [![DockerHub](https://img.shields.io/badge/docker-hbpmip%2Fhierarchizer-008bb8.svg)](https://hub.docker.com/r/hbpmip/hierarchizer/) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/830355fa4faa47169b44572ec43f6fea)](https://www.codacy.com/app/hbp-mip/hierarchizer?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=LREN-CHUV/hierarchizer&amp;utm_campaign=Badge_Grade)
+[![CircleCI](https://circleci.com/gh/LREN-CHUV/hierarchizer.svg?style=svg)](https://circleci.com/gh/LREN-CHUV/hierarchizer)
 
 # Hierarchizer
 

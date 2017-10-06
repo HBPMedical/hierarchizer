@@ -1,4 +1,4 @@
-hierarchizer:
+target_image:
   build: Dockerfile
   image: hbpmip/hierarchizer
   pre:

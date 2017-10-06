@@ -45,9 +45,9 @@ code_quality_checks:
 testing: []
 
 release_management:
-  current_version: 1.3.2
-  current_code_release: https://github.com/HBPMedical/hierarchizer/archive/1.3.2.zip
-  current_docker_release: docker pull hbpmip/hierarchizer:1.3.2
+  current_version: 1.3.3
+  current_code_release: https://github.com/HBPMedical/hierarchizer/archive/1.3.3.zip
+  current_docker_release: docker pull hbpmip/hierarchizer:1.3.3
   release_script: 'publish.sh'
 
 continuous_integration: []
@@ -55,10 +55,10 @@ continuous_integration: []
 distribution:
   docker_hub:
     name: hbpmip/hierarchizer
-    current_tag: 1.3.2
+    current_tag: 1.3.3
     url: https://hub.docker.com/r/hbpmip/hierarchizer/
     badge: https://img.shields.io/badge/docker-hbpmip%2Fhierarchizer-008bb8.svg
-    command: docker pull hbpmip/hierarchizer:1.3.2
+    command: docker pull hbpmip/hierarchizer:1.3.3
 
 planning:
   github:

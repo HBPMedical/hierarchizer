@@ -58,6 +58,9 @@ def main():
     excl_fields = args.excluded_fields if args.excluded_fields else []
     allowed_field_values = {}
     for v in (args.allowed_field_values if args.allowed_field_values else []):
+        if ('=' not in v):
+            logging.error("Argument allowed_field_values: expecting a parameter of the form Key1=V1,V2,V3 found %v")
+            sys.exit(1)
         field, allowed_values = v.split('=')
         allowed_field_values[field] = allowed_values.split(',')
 

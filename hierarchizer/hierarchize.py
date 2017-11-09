@@ -81,10 +81,19 @@ def main():
         logging.info("Auto-configuration : append default PPMI excluded-fields")
 
     if data_type in ['DICOM', 'DCM']:
+        logging.info("Running DICOM hierarchization with the following configuration: "
+                     "input_folder: %s, output_folder: %s, organisation: %s, excluded_fields: %s, "
+                     "use_ppmi_xml_extension: %s, unknown_value: %s, allowed_field_values: %s" %
+                     (input_folder, output_folder, organisation, excl_fields, ppmi_ext_enabled, unknown_value,
+                      allowed_field_values))
         dicom_organizer.organize_dicom(
             input_folder, output_folder, organisation, excl_fields, ppmi_ext_enabled,
             unknown_value, allowed_field_values)
     elif data_type in ['NIFTI', 'NII']:
+        logging.info("Running NIFTI hierarchization with the following configuration: "
+                     "incoming_dataset: %s, input_folder: %s, output_folder: %s, organisation: %s, "
+                     "meta_output_folder: %s" %
+                     (dataset, input_folder, output_folder, organisation, meta_output_folder))
         nifti_organizer.organize_nifti(dataset, input_folder, output_folder, organisation, meta_output_folder)
 
 

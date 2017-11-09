@@ -12,13 +12,15 @@ def organize_dicom(input_folder, output_folder, organisation, excluded_fields, u
                    unknown_value, allowed_field_values):
     logging.info("Organizing DICOM files...")
     for file_path in iglob(path.join(input_folder, "**/*"), recursive=True):
+        # logging.info("Processing file: %s" % file_path)
         output_fullpath = output_folder
         try:
             dcm = dicom.read_file(file_path)
             for attribute in organisation:
+                # logging.info("-> reading attribute: %s" % attribute)
                 try:
                     part = str(dcm.data_element(attribute).value)
-                except AttributeError:
+                except (AttributeError, KeyError):
                     part = None
                 if not part or len(part.strip()) < 1 or attribute in excluded_fields:
                     part = None

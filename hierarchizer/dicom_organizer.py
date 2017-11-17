@@ -12,12 +12,11 @@ def organize_dicom(input_folder, output_folder, organisation, excluded_fields, u
                    unknown_value, allowed_field_values):
     logging.info("Organizing DICOM files...")
     for file_path in iglob(path.join(input_folder, "**/*"), recursive=True):
-        # logging.info("Processing file: %s" % file_path)
         output_fullpath = output_folder
+        skip = False
         try:
             dcm = dicom.read_file(file_path)
             for attribute in organisation:
-                # logging.info("-> reading attribute: %s" % attribute)
                 try:
                     part = str(dcm.data_element(attribute).value)
                 except (AttributeError, KeyError):
@@ -31,10 +30,12 @@ def organize_dicom(input_folder, output_folder, organisation, excluded_fields, u
                 if attribute in allowed_field_values:
                     if not (part in allowed_field_values[attribute]):
                         logging.info("Skipping file %s..." % file_path)
+                        skip = True
                         continue
-
                 output_fullpath = path.join(output_fullpath, part.replace('/', '_'))
                 output_fullpath = output_fullpath.replace('*', '_')
+            if skip:
+                continue
             makedirs(output_fullpath, exist_ok=True)
             logging.info("Copying %s to %s..." % (file_path, output_fullpath))
             copy2(file_path, output_fullpath)

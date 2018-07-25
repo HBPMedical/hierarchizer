@@ -1,5 +1,7 @@
 import logging
 import shutil
+import gzip
+from os import remove
 from os import path
 from os import makedirs
 from os import listdir
@@ -30,6 +32,79 @@ def organize_nifti(incoming_dataset, input_folder, output_folder, organisation, 
             logging.warning("Not enough information available: falling back to default organisation !")
             organisation = DEFAULT_ORGANIZATION
         organize_nifti_adni(input_folder, output_folder, organisation, meta_output_folder)
+    elif incoming_dataset == 'BESTA':
+        if not _is_organisation_allowed(organisation, ADNI_NIFTI_ALLOWED_FIELDS):
+            logging.warning("Not enough information available: falling back to default organisation !")
+            organisation = DEFAULT_ORGANIZATION
+        organize_nifti_besta(input_folder, output_folder, organisation)
+    else:
+        if not _is_organisation_allowed(organisation, ADNI_NIFTI_ALLOWED_FIELDS):
+            logging.warning("Not enough information available: falling back to default organisation !")
+            organisation = DEFAULT_ORGANIZATION
+        organize_nifti_minimal(input_folder, output_folder, organisation)
+
+
+def decompress_gzip(filepath):
+    logging.info("Decompressing gzip file: %s" % filepath)
+    extension_length = len(path.basename(filepath).split('.')[-1]) + 1
+    filepath_out = path.join(path.dirname(filepath), path.basename(filepath)[:-extension_length])
+    with gzip.open(filepath, 'rb') as f_in:
+        with open(filepath_out, 'wb') as f_out:
+            shutil.copyfileobj(f_in, f_out)
+    remove(filepath)
+
+
+def organize_nifti_minimal(input_folder, output_folder, organisation):
+    logging.info("Call to organize_nifti_minimal")
+
+    for nii_file in iglob(path.join(input_folder, "**/*.nii"), recursive=True):
+        logging.info("Processing %s..." % nii_file)
+        patient_id = path.basename(nii_file).split('.')[0].split('_')[0]
+
+        metadata = dict()
+        metadata['PatientID'] = patient_id
+        metadata['StudyID'] = "1"
+        metadata['SeriesDescription'] = "T1"
+        metadata['SeriesNumber'] = "1"
+
+        output_fullpath = output_folder
+        for attribute in organisation:
+            output_fullpath = path.join(output_fullpath, metadata[attribute])
+
+        makedirs(output_fullpath, exist_ok=True)
+        logging.info("Copying %s to %s..." % (nii_file, output_fullpath))
+        shutil.copy2(nii_file, output_fullpath)
+
+        logging.info("DONE")
+
+
+def organize_nifti_besta(input_folder, output_folder, organisation):
+    logging.info("Call to organize_nifti_besta")
+
+    default_visit = "1"
+    default_repetition = "1"
+
+    for nii_file in iglob(path.join(input_folder, "**/*.nii.gz"), recursive=True):
+        logging.info("Processing %s..." % nii_file)
+        filename_parts = path.basename(nii_file).split('.')[0].split('_')
+
+        metadata = dict()
+        metadata['PatientID'] = filename_parts[2]
+        metadata['StudyID'] = default_visit
+        metadata['SeriesDescription'] = filename_parts[0]
+        metadata['SeriesNumber'] = default_repetition
+
+        output_fullpath = output_folder
+        for attribute in organisation:
+            output_fullpath = path.join(output_fullpath, metadata[attribute])
+
+        makedirs(output_fullpath, exist_ok=True)
+        logging.info("Copying %s to %s..." % (nii_file, output_fullpath))
+        shutil.copy2(nii_file, output_fullpath)
+
+        decompress_gzip(path.join(output_fullpath, path.basename(nii_file)))
+
+        logging.info("DONE")
 
 
 def organize_nifti_clm(input_folder, output_folder, organisation, meta_output_folder):

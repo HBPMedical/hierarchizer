@@ -1,2 +1,2 @@
 defusedxml
-pydicom
+pydicom==0.9.9

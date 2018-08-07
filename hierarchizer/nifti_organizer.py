@@ -59,7 +59,7 @@ def organize_nifti_minimal(input_folder, output_folder, organisation):
 
     for nii_file in iglob(path.join(input_folder, "**/*.nii"), recursive=True):
         logging.info("Processing %s..." % nii_file)
-        patient_id = path.basename(nii_file).split('.')[0].split('_')[0]
+        patient_id = path.basename(nii_file).split('.')[0]
 
         metadata = dict()
         metadata['PatientID'] = patient_id
